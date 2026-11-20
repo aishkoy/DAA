@@ -1,23 +1,21 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SortedArrayToBST {
 
-    // корнем делаем середину массива: слева меньшие, справа большие,
-    // и половины получаются одинаковые, поэтому дерево сбалансировано
+    // корень - середина массива, слева от неё меньшие числа, справа большие,
+    // и половины одинакового размера, поэтому дерево получается сбалансированным
     public TreeNode sortedArrayToBST(int[] nums) {
-        return build(nums, 0, nums.length - 1);
-    }
-
-    // строю дерево из куска nums[left..right], массив не копирую
-    private TreeNode build(int[] nums, int left, int right) {
-        if (left > right) {
-            return null; // кусок пустой
+        if (nums.length == 0) {
+            return null;
         }
-        int mid = left + (right - left) / 2;
+        int mid = nums.length / 2;
         TreeNode root = new TreeNode(nums[mid]);
-        root.left = build(nums, left, mid - 1);
-        root.right = build(nums, mid + 1, right);
+
+        // копирую левую и правую половины в отдельные массивы и строю из них поддеревья
+        root.left = sortedArrayToBST(Arrays.copyOfRange(nums, 0, mid));
+        root.right = sortedArrayToBST(Arrays.copyOfRange(nums, mid + 1, nums.length));
         return root;
     }
 
@@ -35,9 +33,12 @@ public class SortedArrayToBST {
         SortedArrayToBST solution = new SortedArrayToBST();
         TreeNode root = solution.sortedArrayToBST(new int[]{-10, -3, 0, 5, 9});
 
-        System.out.println(root.val); // 0, середина массива
+        System.out.println(root.val + " " + root.left.val + " " + root.right.val); // 0 -3 9
         List<Integer> list = new ArrayList<>();
         inorder(root, list);
         System.out.println(list); // [-10, -3, 0, 5, 9]
+
+        TreeNode small = solution.sortedArrayToBST(new int[]{1, 3});
+        System.out.println(small.val + " " + small.left.val); // 3 1
     }
 }

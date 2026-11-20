@@ -1,19 +1,18 @@
 public class RangeSumBST {
 
-    // пользуемся тем, что это BST: если узел меньше low, всё его левое поддерево тоже меньше,
-    // туда можно не ходить (и наоборот для high)
+    // обхожу всё дерево и складываю только те узлы, которые попадают в [low, high]
     public int rangeSumBST(TreeNode root, int low, int high) {
         if (root == null) {
             return 0;
         }
-        if (root.val < low) {
-            return rangeSumBST(root.right, low, high); // слева только ещё меньше
+        int sum = 0;
+        if (root.val >= low && root.val <= high) {
+            sum += root.val; // узел в диапазоне
         }
-        if (root.val > high) {
-            return rangeSumBST(root.left, low, high); // справа только ещё больше
-        }
-        // узел в диапазоне, считаем его и обе стороны
-        return root.val + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, low, high);
+        // в обе стороны иду всегда, даже если узел вне диапазона
+        sum += rangeSumBST(root.left, low, high);
+        sum += rangeSumBST(root.right, low, high);
+        return sum;
     }
 
     public static void main(String[] args) {
@@ -27,5 +26,6 @@ public class RangeSumBST {
 
         RangeSumBST solution = new RangeSumBST();
         System.out.println(solution.rangeSumBST(root, 7, 15)); // 32 = 7 + 10 + 15
+        System.out.println(solution.rangeSumBST(root, 6, 10)); // 17 = 7 + 10
     }
 }

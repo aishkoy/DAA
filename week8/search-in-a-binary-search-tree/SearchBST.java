@@ -1,12 +1,18 @@
 public class SearchBST {
 
-    // как бинарный поиск: сравниваем с узлом и идём только в одну сторону
+    // пользуемся свойством BST: слева от узла всё меньше, справа всё больше,
+    // поэтому на каждом шаге идём только в одну сторону
     public TreeNode searchBST(TreeNode root, int val) {
-        TreeNode curr = root;
-        while (curr != null && curr.val != val) {
-            curr = val < curr.val ? curr.left : curr.right;
+        if (root == null) {
+            return null; // дошли до конца ветки, такого значения нет
         }
-        return curr; // либо нашли узел, либо null
+        if (root.val == val) {
+            return root; // нашли, возвращаем узел вместе с его поддеревом
+        }
+        if (val < root.val) {
+            return searchBST(root.left, val);
+        }
+        return searchBST(root.right, val);
     }
 
     public static void main(String[] args) {
